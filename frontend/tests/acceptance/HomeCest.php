@@ -16,5 +16,18 @@ class HomeCest
         $I->wait(2); // wait for page to be opened
 
         $I->see('This is the About page.');
+    } 
+
+
+    public function checkTasks(AcceptanceTester $I)
+    {
+        $I->amOnPage(Url::toRoute('/tasks'));
+        $I->see('Created');
+
+        $I->seeLink('Task1');
+        $I->click('Task1');
+        $I->wait(2); // wait for page to be opened
+
+        $I->see('Task update: Task1');
     }
 }
