@@ -5,6 +5,8 @@ namespace frontend\controllers;
 
 use common\models\tables\Tasks;
 use common\models\tables\Users;
+use common\models\tables\Chat;
+
 use Yii;
 
 use yii\data\ActiveDataProvider;
@@ -96,7 +98,7 @@ class TasksController extends Controller
      
 
         return $this->render('create', [
-            'model' => $model, 'array' => $newArray,
+            'model' => $model, 'array' => $newArray, 
         ]);
     }
 
@@ -118,6 +120,7 @@ class TasksController extends Controller
 /* 
         var_dump($model->load(Yii::$app->request->post())); exit; */
 
+        /* $newChat = new \console\components\Chat(); */
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $user = Users::find()->select(['username'])->where(['id' => $model->responsible_id])->one()->username;
@@ -133,26 +136,46 @@ class TasksController extends Controller
           
       
           }
+        $channel = 'Task_' . $id;
+        $chatItems = Chat::find()->select('*')
+          ->with('user')
+          ->where(['channel' => $channel])
+          ->orderBy('created_at')
+          ->all();
       
         return $this->render('update', [
             'model' => $model, 
             'array' => $newArray, 
             'imageModel'=>$imageModel, 
-            'taskCommentForm' => new Comments,
+            'taskCommentForm' => new Comments(),
             'userId' => \Yii::$app->user->id,
+            'channel' => $channel,
+            'chatItems' => $chatItems,
         ]);
     }
 
     public function actionAddComment() 
     {
      
-        $model = new Comments();
-        if($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+        $modelComments = new Comments();
+        if($modelComments->load(\Yii::$app->request->post()) && $modelComments->save()) {
+           
+           /* \Yii::$app->session->setFlash('success', "Комментарий добавлен"); */
         } else {
-            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
+            /* \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий"); */
         }
-        $this->redirect(\Yii::$app->request->referrer);
+
+        $id = $modelComments->task_id;
+
+        /* Tasks::find()->select('*')->where(['id'=>$id])->with('comments')->one(), */ 
+
+        return $this->render('_comments', [
+            'model' => $this->findModel($id),
+            'taskCommentForm' => new Comments(),
+            'userId' => \Yii::$app->user->id,
+           
+        ]);
+       /*  return $this->redirect(\Yii::$app->request->referrer); */
     }
 
     public function actionCardUpdate($id)
@@ -166,7 +189,7 @@ class TasksController extends Controller
         }
 
         return $this->render('update', [
-            'model' => $model, 'array' => $newArray,
+            'model' => $model, 'array' => $newArray, 'channel' => 'Task_' . $id
         ]);
     }
 
@@ -198,5 +221,9 @@ class TasksController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionPrint($obj) {
+        var_dump($obj);exit;
     }
 }

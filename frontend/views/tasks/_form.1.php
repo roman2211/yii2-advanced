@@ -40,17 +40,28 @@ TaskOneAsset::register($this);
 </div>
 
 <div class="form_comments">
-
-    <?= $this->render('_comments', [
-            'model' => $model, 
-            'taskCommentForm' => $taskCommentForm,
-            'userId' => $userId,
-        ]);
-    ?>
-
-</div>
-
-<div>
+    <h3>Комментарии</h3>
+    <?php Pjax::begin(['id' => 'comments']);?>
+    <?php $formComments = ActiveForm::begin(
+        [
+        'action' => Url::to(['tasks/add-comment']),
+        'options' => ['data' => ['pjax' => true]],
+        ]        
+        );?>
+    <?= $formComments->field($taskCommentForm, 'user_id')->hiddenInput(['value' => $userId])->label(false);?>
+    <?= $formComments->field($taskCommentForm, 'task_id')->hiddenInput(['value' => $model->id])->label(false); ?>
+    <?= $formComments->field($taskCommentForm, 'comment')->textInput(); ?>
+    <?= Html::submitButton("Add", ['class' => 'btn btn-default']); ?>
+    <?php ActiveForm::end() ?>
+   
+   
+    <hr>
+    <div class="comment-history">
+        <?foreach ($model->comments as $comment): ?>
+            <p><strong><?= $comment->user->username?></strong>: <?= $comment->comment ?> </p>
+        <?php endforeach;?>
+    </div> 
+    <?php Pjax::end();?>
     
     <h3>Чат</h3>
     <div class="task-chat">

@@ -16,7 +16,13 @@ $this->params['breadcrumbs'][] = 'Update';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $model, 'array' => $array, 'imageModel' => $imageModel, 'taskCommentForm' => $taskCommentForm, 'userId' => $userId
+        'model' => $model, 
+        'array' => $array, 
+        'imageModel' => $imageModel, 
+        'taskCommentForm' => $taskCommentForm, 
+        'userId' => $userId,
+        'channel' => $channel,
+        'chatItems' => $chatItems,
     ]) ?>
    
 
