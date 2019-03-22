@@ -28,6 +28,8 @@ class m190225_193305_create_table_comments extends Migration
      */
     public function Down()
     {
+        $this->dropForeignKey('fr_comments_user', 'comments');
+        $this->dropForeignKey('fk_comments_task', 'comments');
         $this->dropTable('comments');
 
     }

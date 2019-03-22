@@ -21,8 +21,7 @@ class m190208_111839_create_tasks_table extends Migration
             'status_id' => $this->integer(),
         ]);
 
-       /*  $this->createIndex("ix_tasks_responsible", "tasks", "responsible_id"); */
-        $this->addForeignKey("fk_users_foreign", "tasks", "responsible_id", "users", "id" );
+        $this->addForeignKey('fk_users_foreign', 'tasks", "responsible_id', 'users', 'id' );
     }
 
     /**
@@ -30,6 +29,7 @@ class m190208_111839_create_tasks_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk_users_foreign', 'tasks');
         $this->dropTable('{{%tasks}}');
     }
 }
