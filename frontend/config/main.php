@@ -28,10 +28,14 @@ return [
         ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'parsers' => [
+                'application/json' => \yii\web\JsonParser::class,
+            ],
             'baseUrl' => '',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
+            'enableSession' => null, // отключаем сессии для того чтобы сделать полноценный RESTFull
             'enableAutoLogin' => true,
             'identityCookie' => [
                 'name' => '_identity', 
@@ -62,12 +66,16 @@ return [
             'errorAction' => 'site/error',
         ],
         
-        /* 'urlManager' => [
+        'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                'class' => \yii\rest\UrlRule::class, 
+                'controller' => ['api-task'],
+                ],
             ],
-        ], */
+        ],
         
     ],
     'params' => $params,

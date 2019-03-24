@@ -160,9 +160,9 @@ class TasksController extends Controller
         $modelComments = new Comments();
         if($modelComments->load(\Yii::$app->request->post()) && $modelComments->save()) {
            
-           /* \Yii::$app->session->setFlash('success', "Комментарий добавлен"); */
+           \Yii::$app->session->setFlash('success', "Комментарий добавлен");
         } else {
-            /* \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий"); */
+            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
         }
 
         $id = $modelComments->task_id;
